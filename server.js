@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
-const db = require("./src/db/connection");
+
+const db = require('./src/db/connection');
+//hash the password and add to the database
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 const cors = require("cors");
 
@@ -21,140 +26,287 @@ app.use((req, res, next) => {
 
 app.use(cookieParser());
 
-// console.log(groceries)
-//         console.log(restaurant)
-//         console.log(barCafe)
-//         console.log(rent)
-//         console.log(utilities)
-//         console.log(insurance)
-//         console.log(fuel)
-//         console.log(entertaiment)
-//         console.log(communication)
-//         console.log(total)
 
-//POST CREATE EXPENSES
-// app.post('/createExpenses', (req, res) => {
-//   console.log('hey from server');
+// =========================== //
+// ===== CREATE EXPENSES ==== //
+// =========================== //
 
-//   const {
-//     userID,
-//     id,
-//     groceries,
-//     restaurant,
-//     barCafe,
-//     rent,
-//     utilities,
-//     insurance,
-//     fuel,
-//     entertaiment,
-//     communication,
-//     total,
-//   } = req.body;
+app.post('/createExpenses', async (req, res) => {
+  console.log('hey from server');
 
-//   console.log(req.body);
+  const {
+    userID,
+    id,
+    groceries,
+    restaurant,
+    barCafe,
+    rent,
+    utilities,
+    insurance,
+    fuel,
+    entertaiment,
+    communication,
+    total,
+  } = req.body;
 
-// const q = 'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)'
+  const q =
+    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
 
-// db.query(q,[userID,id,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,total],(err,data) => {
+  //not finished %100 , we are waiting for userID
 
-//   if(err){
-// console.log('failed to add to database',err);
-// return;
-//   }
+  await db.query(
+    q,
+    [
+      userID,
+      id,
+      groceries,
+      restaurant,
+      barcafe,
+      rent,
+      utilities,
+      insurance,
+      fuel,
+      entertaiment,
+      communication,
+      total,
+    ],
+    (err, data) => {
+      if (err) {
+        console.log('failed to add to database', err);
+        return;
+      }
 
-//   console.log(data);
+      res.json({ message: 'successfully added to database' });
+    }
+  );
+});
 
-// })
+// =========================== //
+// ===== UPDATE EXPENSES ==== //
+// =========================== //
 
-//   const q =
-//     "INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+app.put('/updateExpenses', async (req, res) => {
+  const {
+    userID,
+    id,
+    groceries,
+    restaurant,
+    barCafe,
+    rent,
+    utilities,
+    insurance,
+    fuel,
+    entertaiment,
+    communication,
+    total,
+  } = req.body;
 
-//   db.query(
-//     q,
-//     [
-//       userID,
-//       id,
-//       budgetName,
-//       periodDate,
-//       startDate,
-//       endDate,
-//       totalAmountAllocated,
-//     ],
-//     (err, data) => {
-//       if (err) {
-//         console.log("failed to add to database", err);
-//         return;
-//       }
+  const q = `UPDATE expenses_table SET groceries = ${groceries},restaurant = ${restaurant},barCafe = ${barCafe},rent = ${rent},utilities = ${utilities},insurance = ${insurance},fuel = ${fuel},entertaiment = ${entertaiment},communication  = ${communication},total = ${total} WHERE budgetid = ${id}`;
 
-//       console.log(data);
-//     }
-//   );
-// });
+  //not finished %100 , we are waiting for userID
 
-// //POST CREATE BUDGET
-// app.post('/createBudget', (req, res) => {
-//   console.log('hey from server');
+  await db.query(q, (err, data) => {
+    if (err) {
+      console.log('failed to update database', err);
+      return;
+    }
 
-// const {
-// userId,
-// id,
-// budgetName,
-// periodDate,
-// startDate,
-// endDate,
-// totalAmountAllocated
-// }  = req.body;
+    res.json({ message: 'successfully updated the database' });
+  });
+});
 
-// const q = 'INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
+// =========================== //
+// ===== DELETE EXPENSES ==== //
+// =========================== //
 
-// db.query(q,[userID,id,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
+app.delete('/deleteExpense/:budgetId', async (req, res) => {
+  const { budgetId } = req.params;
 
-//   const { budgetId } = req.params;
-//   console.log(req.params);
+  console.log(req.params);
 
-//   const q = `SELECT * FROM expenses_table WHERE budgetid = ${budgetId}`;
+  const q = `DELETE FROM expenses_table WHERE budgetid =${budgetId}`;
 
-//   console.log(q);
+  await db.query(q, (err, data) => {
+    console.log(err, data);
+    if (err) {
+      console.log('failed to delete from database', err);
+      return;
+    }
 
-//   await db.query(q, (err, data) => {
-//     if (err) {
-//       console.log("failed to add to database", err);
-//       return;
-//     }
+    res.json({ message: 'successfully deleted from database' });
+  });
+});
 
-//     res.json({ data: data.rows[0] });
+// =========================== //
+// ===== CREATE USER ==== //
+// =========================== //
 
-//     console.log(data.rows[0]);
-//   });
-// });
+app.post('/createUser', (req, res) => {
+  console.log('hey from server');
 
-// });
+  const { firstName, lastName, email, password } = req.body;
+  console.log(req.body);
 
-// //GET BUDGET (EXPENSES)
-// app.get('/budget/:budgetId', async (req, res) => {
-//   console.log('hey from server');
+  bcrypt.hash(password, saltRounds, (err, hashed) => {
+    if (err) {
+      console.log(err);
+      console.log('failed to hash your password');
+      return;
+    }
 
-//   const {budgetId} = req.params;
-//   console.log(req.params)
+    const q =
+      'INSERT INTO user_table (firstname,lastname,email,password) VALUES ($1,$2,$3,$4)';
 
-// const q = `SELECT * FROM expenses_table WHERE budgetid = ${budgetId}`;
+    db.query(q, [firstName, lastName, email, hashed], (err, data) => {
+      if (err) {
+        console.log('failed to add user to database', err);
+        return;
+      }
 
-//   console.log(q)
+      res.json({ message: 'successfully logged in!!!' });
+    });
+  });
 
-// await db.query(q,(err,data) => {
+// =========================== //
+// ===== CREATE EXPENSES ==== //
+// =========================== //
+  
+  
+app.post('/createExpenses', (req, res) => {
+  console.log('hey from server');
 
-//   if(err){
-// console.log('failed to add to database',err);
-// return;
-//   }
+  const {
+    userID,
+    id,
+    groceries,
+    restaurant,
+    barCafe,
+    rent,
+    utilities,
+    insurance,
+    fuel,
+    entertaiment,
+    communication,
+    total,
+  } = req.body;
 
-// res.json ({data: data.rows[0]});
+  console.log(req.body);
 
-// console.log(data.rows[0]);
+const q = 'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)'
 
-// })
+db.query(q,[userID,id,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,total],(err,data) => {
 
-// });
+  if(err){
+console.log('failed to add to database',err);
+return;
+  }
+
+  console.log(data);
+
+})
+
+  const q =
+    "INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+
+  db.query(
+    q,
+    [
+      userID,
+      id,
+      budgetName,
+      periodDate,
+      startDate,
+      endDate,
+      totalAmountAllocated,
+    ],
+    (err, data) => {
+      if (err) {
+        console.log("failed to add to database", err);
+        return;
+      }
+
+      console.log(data);
+    }
+  );
+});
+
+// =========================== //
+// ===== CREATE BUDGET ==== //
+// =========================== //
+  
+  
+app.post('/createBudget', (req, res) => {
+  console.log('hey from server');
+
+const {
+userId,
+id,
+budgetName,
+periodDate,
+startDate,
+endDate,
+totalAmountAllocated
+}  = req.body;
+
+const q = 'INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
+
+db.query(q,[userID,id,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
+
+  const { budgetId } = req.params;
+  console.log(req.params);
+
+  const q = `SELECT * FROM expenses_table WHERE budgetid = ${budgetId}`;
+
+  console.log(q);
+
+  await db.query(q, (err, data) => {
+    if (err) {
+      console.log("failed to add to database", err);
+      return;
+    }
+
+    res.json({ data: data.rows[0] });
+
+    console.log(data.rows[0]);
+  });
+});
+
+});
+
+// =========================== //
+// ===== GET BUDGET ==== //
+// =========================== //
+  
+  
+app.get('/budget/:budgetId', async (req, res) => {
+  console.log('hey from server');
+
+  const {budgetId} = req.params;
+  console.log(req.params)
+
+const q = `SELECT * FROM expenses_table WHERE budgetid = ${budgetId}`;
+
+  console.log(q)
+
+await db.query(q,(err,data) => {
+
+  if(err){
+console.log('failed to add to database',err);
+return;
+  }
+
+res.json ({data: data.rows[0]});
+
+console.log(data.rows[0]);
+
+})
+
+});
+  
+  
+// =========================== //
+// ===== USER LOGIN ==== //
+// =========================== //  
 
 
 //GET BUDGET (BY BUDGET NAME)
@@ -211,7 +363,10 @@ app.post("/login", async (req, res) => {
     }
   });
   console.log(req.body);
+
 });
+  
+  
 
 app.listen(port, (req, res) => {
   console.log(`server is listening on port ${port}`);
