@@ -166,12 +166,12 @@ app.post('/createUser', (req, res) => {
       res.json({ message: 'successfully logged in!!!' });
     });
   });
-
+});
 // =========================== //
 // ===== CREATE EXPENSES ==== //
 // =========================== //
-  
-  
+
+
 app.post('/createExpenses', (req, res) => {
   console.log('hey from server');
 
@@ -204,37 +204,13 @@ return;
   console.log(data);
 
 })
-
-  const q =
-    "INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)";
-
-  db.query(
-    q,
-    [
-      userID,
-      id,
-      budgetName,
-      periodDate,
-      startDate,
-      endDate,
-      totalAmountAllocated,
-    ],
-    (err, data) => {
-      if (err) {
-        console.log("failed to add to database", err);
-        return;
-      }
-
-      console.log(data);
-    }
-  );
 });
 
 // =========================== //
 // ===== CREATE BUDGET ==== //
 // =========================== //
-  
-  
+
+
 app.post('/createBudget', (req, res) => {
   console.log('hey from server');
 
@@ -259,7 +235,7 @@ db.query(q,[userID,id,budgetName,periodDate,startDate,endDate,totalAmountAllocat
 
   console.log(q);
 
-  await db.query(q, (err, data) => {
+  db.query(q, (err, data) => {
     if (err) {
       console.log("failed to add to database", err);
       return;
@@ -276,8 +252,8 @@ db.query(q,[userID,id,budgetName,periodDate,startDate,endDate,totalAmountAllocat
 // =========================== //
 // ===== GET BUDGET ==== //
 // =========================== //
-  
-  
+
+
 app.get('/budget/:budgetId', async (req, res) => {
   console.log('hey from server');
 
@@ -302,14 +278,13 @@ console.log(data.rows[0]);
 })
 
 });
-  
-  
+
+
 // =========================== //
-// ===== USER LOGIN ==== //
-// =========================== //  
+// ===== GET BUDGETS (BY NAME) ==== //
+// =========================== //
 
 
-//GET BUDGET (BY BUDGET NAME)
 app.get('/budgets', async (req, res) => {
   console.log('hey from server');
 
@@ -331,9 +306,16 @@ res.json ({data: budgetNames});
 
 console.log(budgetNames);
 
-})
 
 });
+
+});
+
+
+
+// =========================== //
+// ===== USER LOGIN ==== //
+// =========================== //
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -365,8 +347,7 @@ app.post("/login", async (req, res) => {
   console.log(req.body);
 
 });
-  
-  
+
 
 app.listen(port, (req, res) => {
   console.log(`server is listening on port ${port}`);
