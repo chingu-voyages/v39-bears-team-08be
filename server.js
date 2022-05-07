@@ -156,6 +156,33 @@ app.use(cookieParser());
 
 // });
 
+
+//GET BUDGET (BY BUDGET NAME)
+app.get('/budgets', async (req, res) => {
+  console.log('hey from server');
+
+const q = `SELECT budgetname FROM budget_table`;
+
+
+await db.query(q,(err,data) => {
+
+  if(err){
+console.log('failed to add to database',err);
+return;
+  }
+
+const budgetNames = [];
+for (let i=0; i<data.rows.length; i++){
+  budgetNames.push(data.rows[i].budgetname)
+}
+res.json ({data: budgetNames});
+
+console.log(budgetNames);
+
+})
+
+});
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
