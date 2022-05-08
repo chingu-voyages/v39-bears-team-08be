@@ -216,7 +216,6 @@ app.post('/createBudget', (req, res) => {
 
 const {
 userId,
-id,
 budgetName,
 periodDate,
 startDate,
@@ -224,27 +223,27 @@ endDate,
 totalAmountAllocated
 }  = req.body;
 
-const q = 'INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
+// {
+//         userId : userData.userID,
+//         budgetName,
+//         periodDate:period,
+//         startDate,
+//         endDate,
+//         totalAmountAllocated
+//       }
 
-db.query(q,[userID,id,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
+const q = 'INSERT INTO budget_table (userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6)'
 
-  const { budgetId } = req.params;
-  console.log(req.params);
+db.query(q,[userId,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
 
-  const q = `SELECT * FROM expenses_table WHERE budgetid = ${budgetId}`;
+if(err) {
+  console.log('failed to add budget to database')
+  throw err;
+  return;
+}
 
-  console.log(q);
+console.log('budget added to database')
 
-  db.query(q, (err, data) => {
-    if (err) {
-      console.log("failed to add to database", err);
-      return;
-    }
-
-    res.json({ data: data.rows[0] });
-
-    console.log(data.rows[0]);
-  });
 });
 
 });
@@ -331,23 +330,28 @@ app.post("/login", async (req, res) => {
     }
 
     if (data.rows[0].email === email) {
-      if (data.rows[0].password === password) {
-        //  send back user email
-        res.send(data.rows[0]);
-        // send back first name
-        console.log("rayhan is logged in");
-      } else {
-        res.status(404).send("email or password is incorrect");
-      }
-    } else {
-      res.status(404).send("email or password is incorrect ");
-      console.log("email or password is incorrect");
+
+      bcrypt.compare(password, data.rows[0].password,(err, result) => {
+
+        if(result === true){
+          console.log(data.rows[0])
+          console.log('login successful')
+  res.json({data:{
+    userID:data.rows[0].userid,
+          firstName:data.rows[0].firstName,
+          lastName: data.rows[0].lastName,
+          email: data.rows[0].email,
+          password: password
+        }})
+        }else{
+          console.log('login failed')
+          res.sendStatus(404).json({message:'login failed'})
+        }
+
+      })
     }
-  });
-  console.log(req.body);
-
 });
-
+})
 
 app.listen(port, (req, res) => {
   console.log(`server is listening on port ${port}`);
