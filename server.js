@@ -155,7 +155,7 @@ app.post('/createUser', (req, res) => {
     }
 
     const q =
-      'INSERT INTO user_table (firstname,lastname,email,password) VALUES ($1,$2,$3,$4)';
+      `INSERT INTO user_table (firstname,lastname,email,password) VALUES ($1,$2,$3,$4) RETURNING *`;
 
     db.query(q, [firstName, lastName, email, hashed], (err, data) => {
       if (err) {
@@ -163,7 +163,8 @@ app.post('/createUser', (req, res) => {
         return;
       }
 
-      res.json({ message: 'successfully logged in!!!' });
+
+      res.json({ data: data.rows[0]});
     });
   });
 });
