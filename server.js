@@ -39,18 +39,18 @@ app.post('/createExpenses', async (req, res) => {
     id,
     groceries,
     restaurant,
-    barCafe,
+    barcafe,
     rent,
     utilities,
     insurance,
     fuel,
-    entertaiment,
+    entertainment,
     communication,
     total,
   } = req.body;
 
   const q =
-    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
+    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertainment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
 
   //not finished %100 , we are waiting for userID
 
@@ -66,7 +66,7 @@ app.post('/createExpenses', async (req, res) => {
       utilities,
       insurance,
       fuel,
-      entertaiment,
+      entertainment,
       communication,
       total,
     ],
@@ -180,7 +180,7 @@ app.post('/createExpenses', (req, res) => {
     id,
     groceries,
     restaurant,
-    barCafe,
+    barcafe,
     rent,
     utilities,
     insurance,
