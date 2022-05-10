@@ -18,10 +18,10 @@
 //   });
 // });
 
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 
 const PG_URI =
-  'postgres://endarsmu:oeDtvJt1pGaC2iryC0e2795DruK-ApFw@isilo.db.elephantsql.com/endarsmu';
+  "postgres://endarsmu:oeDtvJt1pGaC2iryC0e2795DruK-ApFw@isilo.db.elephantsql.com/endarsmu";
 
 const pool = new Pool({
   connectionString: PG_URI,
