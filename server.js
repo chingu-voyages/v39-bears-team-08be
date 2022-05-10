@@ -191,7 +191,7 @@ app.post('/createExpenses', (req, res) => {
     total,
   } = req.body;
 
-  console.log(req.body.userID);
+  console.log(req.body);
 
 const q = 'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)'
 
@@ -216,20 +216,20 @@ app.post('/createBudget', (req, res) => {
   console.log('hey from server');
 
 const {
-userID,
+userId,
 id,
 budgetName,
 periodDate,
 startDate,
 endDate,
 totalAmountAllocated
-}  = req.body.userID;
+}  = req.body;
 
-console.log(req.body.userID)
+console.log(req.body)
 
 const q = 'INSERT INTO budget_table (budgetid,userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
 
-db.query(q,[id,userID,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
+db.query(q,[id,userId,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
 
   const { budgetId } = req.params;
   console.log(req.params);
