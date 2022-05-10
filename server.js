@@ -216,7 +216,7 @@ app.post('/createBudget', (req, res) => {
   console.log('hey from server');
 
 const {
-userId,
+userID,
 id,
 budgetName,
 periodDate,
@@ -229,28 +229,22 @@ console.log(req.body)
 
 const q = 'INSERT INTO budget_table (budgetid,userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
 
-db.query(q,[id,userId,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
-
-  const { budgetId } = req.params;
-  console.log(req.params);
-
-  const q = `SELECT * FROM expenses_table WHERE budgetid = ${budgetId}`;
+db.query(q,[id,userID,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
 
   console.log(q);
 
-  db.query(q, (err, data) => {
     if (err) {
       console.log("failed to add to database", err);
       return;
     }
 
-    res.json({ data: data.rows[0] });
+    // res.json({ data: data.rows[0] });
 
-    console.log(data.rows[0]);
+    // console.log(data.rows[0]);
   });
 });
 
-});
+
 
 // =========================== //
 // ===== GET BUDGET ==== //
