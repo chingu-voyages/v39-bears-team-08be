@@ -91,17 +91,17 @@ app.put('/updateExpenses', async (req, res) => {
     id,
     groceries,
     restaurant,
-    barCafe,
+    barcafe,
     rent,
     utilities,
     insurance,
     fuel,
-    entertaiment,
+    entertainment,
     communication,
     total,
   } = req.body;
 
-  const q = `UPDATE expenses_table SET groceries = ${groceries},restaurant = ${restaurant},barCafe = ${barCafe},rent = ${rent},utilities = ${utilities},insurance = ${insurance},fuel = ${fuel},entertaiment = ${entertaiment},communication  = ${communication},total = ${total} WHERE budgetid = ${id}`;
+  const q = `UPDATE expenses_table SET groceries = ${groceries},restaurant = ${restaurant},barCafe = ${barcafe},rent = ${rent},utilities = ${utilities},insurance = ${insurance},fuel = ${fuel},entertaiment = ${entertainment},communication  = ${communication},total = ${total} WHERE budgetid = ${id}`;
 
   //not finished %100 , we are waiting for userID
 
@@ -145,6 +145,7 @@ app.post('/createUser', (req, res) => {
   console.log('hey from server');
 
   const { firstName, lastName, email, password } = req.body;
+
   console.log(req.body);
 
   bcrypt.hash(password, saltRounds, (err, hashed) => {
@@ -190,7 +191,7 @@ app.post('/createExpenses', (req, res) => {
     total,
   } = req.body;
 
-  console.log(req.body);
+  console.log(req.body.userID);
 
 const q = 'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)'
 
@@ -215,18 +216,20 @@ app.post('/createBudget', (req, res) => {
   console.log('hey from server');
 
 const {
-userId,
+userID,
 id,
 budgetName,
 periodDate,
 startDate,
 endDate,
 totalAmountAllocated
-}  = req.body;
+}  = req.body.userID;
 
-const q = 'INSERT INTO budget_table (userid,budgetid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
+console.log(req.body.userID)
 
-db.query(q,[userID,id,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
+const q = 'INSERT INTO budget_table (budgetid,userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6,$7)'
+
+db.query(q,[id,userID,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
 
   const { budgetId } = req.params;
   console.log(req.params);
