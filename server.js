@@ -233,7 +233,7 @@ totalAmountAllocated
 //         totalAmountAllocated
 //       }
 
-const q = 'INSERT INTO budget_table (userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6)'
+const q = 'INSERT INTO budget_table (userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6) RETURNING budgetid'
 
 db.query(q,[userId,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
 
@@ -242,6 +242,7 @@ if(err) {
   throw err;
   return;
 }
+res.json({data: data.rows[0]})
 
 console.log('budget added to database')
 
