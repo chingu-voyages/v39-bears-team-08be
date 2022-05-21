@@ -39,18 +39,18 @@ app.post('/createExpenses', async (req, res) => {
     id,
     groceries,
     restaurant,
-    barCafe,
+    barcafe,
     rent,
     utilities,
     insurance,
     fuel,
-    entertaiment,
+    entertainment,
     communication,
     total,
   } = req.body;
 
   const q =
-    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
+    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertainment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
 
   //not finished %100 , we are waiting for userID
 
@@ -66,7 +66,7 @@ app.post('/createExpenses', async (req, res) => {
       utilities,
       insurance,
       fuel,
-      entertaiment,
+      entertainment,
       communication,
       total,
     ],
@@ -96,7 +96,7 @@ app.put('/updateExpenses', async (req, res) => {
     utilities,
     insurance,
     fuel,
-    entertaiment,
+    entertainment,
     communication,
     total,
   } = req.body;
@@ -224,24 +224,16 @@ endDate,
 totalAmountAllocated
 }  = req.body;
 
-// {
-//         userId : userData.userID,
-//         budgetName,
-//         periodDate:period,
-//         startDate,
-//         endDate,
-//         totalAmountAllocated
-//       }
 
 const q = 'INSERT INTO budget_table (userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6) RETURNING budgetid'
 
 db.query(q,[userId,budgetName,periodDate,startDate,endDate,totalAmountAllocated],(err,data) => {
 
 if(err) {
-  console.log('failed to add budget to database')
-  throw err;
+  console.log('failed to add budget to database',err)
   return;
 }
+
 res.json({data: data.rows[0]})
 
 console.log('budget added to database')
@@ -286,11 +278,11 @@ console.log(data.rows[0]);
 // =========================== //
 
 
-app.get('/budgets', async (req, res) => {
+app.get('/budgets/:userID', async (req, res) => {
   console.log('hey from server');
 
-const q = `SELECT budgetname FROM budget_table`;
-
+const {userID} = req.params
+const q = `SELECT budgetname, budgetid FROM budget_table WHERE userid = ${userID}`;
 
 await db.query(q,(err,data) => {
 
