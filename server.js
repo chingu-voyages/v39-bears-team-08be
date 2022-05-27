@@ -1,17 +1,17 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 
-const db = require("./src/db/connection");
+const db = require('./src/db/connection');
 //hash the password and add to the database
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-const cors = require("cors");
+const cors = require('cors');
 
 const port = 5000;
 
-const cookieParser = require("cookie-parser");
-const { query } = require("express");
+const cookieParser = require('cookie-parser');
+const { query } = require('express');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Origin', '*');
   next();
 });
 
@@ -29,8 +29,8 @@ app.use(cookieParser());
 // ===== CREATE EXPENSES ==== //
 // =========================== //
 
-app.post("/createExpenses", async (req, res) => {
-  console.log("hey from server");
+app.post('/createExpenses', async (req, res) => {
+  console.log('hey from server');
 
   const {
     userID,
@@ -48,7 +48,7 @@ app.post("/createExpenses", async (req, res) => {
   } = req.body;
 
   const q =
-    "INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertainment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
+    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertainment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
 
   //not finished %100 , we are waiting for userID
 
@@ -70,11 +70,11 @@ app.post("/createExpenses", async (req, res) => {
     ],
     (err, data) => {
       if (err) {
-        console.log("failed to add to database", err);
+        console.log('failed to add to database', err);
         return;
       }
 
-      res.json({ message: "successfully added to database" });
+      res.json({ message: 'successfully added to database' });
     }
   );
 });
@@ -83,7 +83,7 @@ app.post("/createExpenses", async (req, res) => {
 // ===== UPDATE EXPENSES ==== //
 // =========================== //
 
-app.put("/updateExpenses", async (req, res) => {
+app.put('/updateExpenses', async (req, res) => {
   const {
     userID,
     id,
@@ -105,11 +105,11 @@ app.put("/updateExpenses", async (req, res) => {
 
   await db.query(q, (err, data) => {
     if (err) {
-      console.log("failed to update database", err);
+      console.log('failed to update database', err);
       return;
     }
 
-    res.json({ message: "successfully updated the database" });
+    res.json({ message: 'successfully updated the database' });
   });
 });
 
@@ -117,7 +117,7 @@ app.put("/updateExpenses", async (req, res) => {
 // ===== DELETE EXPENSES ==== //
 // =========================== //
 
-app.delete("/deleteExpense/:budgetId", async (req, res) => {
+app.delete('/deleteExpense/:budgetId', async (req, res) => {
   const { budgetId } = req.params;
 
   console.log(req.params);
@@ -127,11 +127,11 @@ app.delete("/deleteExpense/:budgetId", async (req, res) => {
   await db.query(q, (err, data) => {
     console.log(err, data);
     if (err) {
-      console.log("failed to delete from database", err);
+      console.log('failed to delete from database', err);
       return;
     }
 
-    res.json({ message: "successfully deleted from database" });
+    res.json({ message: 'successfully deleted from database' });
   });
 });
 
@@ -139,8 +139,8 @@ app.delete("/deleteExpense/:budgetId", async (req, res) => {
 // ===== CREATE USER ==== //
 // =========================== //
 
-app.post("/createUser", (req, res) => {
-  console.log("hey from server");
+app.post('/createUser', (req, res) => {
+  console.log('hey from server');
 
   const { firstName, lastName, email, password } = req.body;
   console.log(req.body);
@@ -148,7 +148,7 @@ app.post("/createUser", (req, res) => {
   bcrypt.hash(password, saltRounds, (err, hashed) => {
     if (err) {
       console.log(err);
-      console.log("failed to hash your password");
+      console.log('failed to hash your password');
       return;
     }
 
@@ -156,7 +156,7 @@ app.post("/createUser", (req, res) => {
 
     db.query(q, [firstName, lastName, email, hashed], (err, data) => {
       if (err) {
-        console.log("failed to add user to database", err);
+        console.log('failed to add user to database', err);
         return;
       }
 
@@ -168,8 +168,8 @@ app.post("/createUser", (req, res) => {
 // ===== CREATE EXPENSES ==== //
 // =========================== //
 
-app.post("/createExpenses", (req, res) => {
-  console.log("hey from server");
+app.post('/createExpenses', (req, res) => {
+  console.log('hey from server');
 
   const {
     userID,
@@ -189,7 +189,7 @@ app.post("/createExpenses", (req, res) => {
   console.log(req.body);
 
   const q =
-    "INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
+    'INSERT INTO expenses_table (userid,budgetid,groceries,restaurant,barcafe,rent,utilities,insurance,fuel,entertaiment,communication,totalexpenses) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)';
 
   db.query(
     q,
@@ -209,7 +209,7 @@ app.post("/createExpenses", (req, res) => {
     ],
     (err, data) => {
       if (err) {
-        console.log("failed to add to database", err);
+        console.log('failed to add to database', err);
         return;
       }
 
@@ -222,8 +222,8 @@ app.post("/createExpenses", (req, res) => {
 // ===== CREATE BUDGET ==== //
 // =========================== //
 
-app.post("/createBudget", (req, res) => {
-  console.log("hey from server");
+app.post('/createBudget', (req, res) => {
+  console.log('hey from server');
 
   const {
     userID,
@@ -235,20 +235,20 @@ app.post("/createBudget", (req, res) => {
   } = req.body;
 
   const q =
-    "INSERT INTO budget_table (userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6) RETURNING budgetid";
+    'INSERT INTO budget_table (userid,budgetname,perioddate,startdate,enddate,totalamountallocated) VALUES ($1,$2,$3,$4,$5,$6) RETURNING budgetid';
 
   db.query(
     q,
     [userID, budgetName, periodDate, startDate, endDate, totalAmountAllocated],
     (err, data) => {
       if (err) {
-        console.log("failed to add budget to database", err);
+        console.log('failed to add budget to database', err);
         return;
       }
 
       res.json({ data: data.rows[0] });
 
-      console.log("budget added to database");
+      console.log('budget added to database');
     }
   );
 });
@@ -257,8 +257,8 @@ app.post("/createBudget", (req, res) => {
 // ===== GET BUDGET ==== //
 // =========================== //
 
-app.get("/budget/:budgetId", async (req, res) => {
-  console.log("hey from server");
+app.get('/budget/:budgetId', async (req, res) => {
+  console.log('hey from server');
 
   const { budgetId } = req.params;
   console.log(req.params);
@@ -269,13 +269,30 @@ app.get("/budget/:budgetId", async (req, res) => {
 
   await db.query(q, (err, data) => {
     if (err) {
-      console.log("failed to add to database", err);
+      console.log('failed to add to database', err);
       return;
     }
 
-    res.json({ data: data.rows[0] });
+    let total = 0;
 
-    console.log(data.rows[0]);
+    let i = 0;
+
+    const newResponse = {};
+
+    let amount = 0;
+
+    for (let key in data.rows[0]) {
+      if (i >= 5 && i < 14 && data.rows[0][key] !== 0) {
+        newResponse[key] = data.rows[0][key];
+        total += data.rows[0][key];
+        amount++;
+      }
+      i++;
+    }
+
+    console.log({ data: newResponse, totalexpenses: total });
+
+    res.json({ data: newResponse, totalexpenses: total, amount: amount });
   });
 });
 
@@ -283,21 +300,26 @@ app.get("/budget/:budgetId", async (req, res) => {
 // ===== GET BUDGETS (BY NAME) ==== //
 // =========================== //
 
-app.get("/budgets/:userID", async (req, res) => {
-  console.log("hey from server");
+app.get('/budgets/:userID', async (req, res) => {
+  console.log('hey from server');
 
   const { userID } = req.params;
-  const q = `SELECT budgetname, budgetid FROM budget_table WHERE userid = ${userID}`;
+  console.log('line 290:', userID);
+  const q = `SELECT budgetname, budgetid, totalamountallocated FROM budget_table WHERE userid = ${userID}`;
 
   await db.query(q, (err, data) => {
     if (err) {
-      console.log("failed to add to database", err);
+      console.log('failed to add to database', err);
       return;
     }
 
     const budgetNames = [];
     for (let i = 0; i < data.rows.length; i++) {
-      budgetNames.push(data.rows[i].budgetname);
+      budgetNames.push([
+        data.rows[i].budgetname,
+        data.rows[i].budgetid,
+        data.rows[i].totalamountallocated,
+      ]);
     }
     res.json({ data: budgetNames });
 
@@ -309,16 +331,16 @@ app.get("/budgets/:userID", async (req, res) => {
 // ===== USER LOGIN ==== //
 // =========================== //
 
-app.post("/login", async (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).send("incorrect from submition");
+    return res.status(400).send('incorrect from submition');
   }
 
   const q = `SELECT * FROM user_table WHERE email = '${email}'`;
   await db.query(q, (err, data) => {
     if (err) {
-      console.log("failed to add to database", err);
+      console.log('failed to add to database', err);
       return;
     }
 
@@ -326,7 +348,7 @@ app.post("/login", async (req, res) => {
       bcrypt.compare(password, data.rows[0].password, (err, result) => {
         if (result === true) {
           console.log(data.rows[0]);
-          console.log("login successful");
+          console.log('login successful');
           res.json({
             data: {
               userID: data.rows[0].userid,
@@ -337,8 +359,8 @@ app.post("/login", async (req, res) => {
             },
           });
         } else {
-          console.log("login failed");
-          res.sendStatus(404).json({ message: "login failed" });
+          console.log('login failed');
+          res.sendStatus(404).json({ message: 'login failed' });
         }
       });
     }
