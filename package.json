@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/chingu-voyages/v39-bears-team-08be.git"
   },
+  "engines": {
+    "node": ">=6"
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
