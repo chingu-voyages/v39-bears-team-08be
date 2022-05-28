@@ -34,18 +34,17 @@ V39 Bears Budget APP is a budget app enabling users to create a personal financi
 ## Installation
 
 1. Clone the repo
-
-   ``` NodeJS 
-https://github.com/chingu-voyages/v39-bears-team-08be.git
+``` ruby 
+ https://github.com/chingu-voyages/v39-bears-team-08be.git
 ``` 
+   
 2. Run npm install inside project root directory
-
-   ``` NodeJS 
-npm install
+``` ruby 
+ npm install
 ``` 
 3. Start the server
 
-   ``` 
+``` ruby 
 npm run start
 ``` 
 
